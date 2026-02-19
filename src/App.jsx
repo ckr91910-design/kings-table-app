@@ -1,103 +1,130 @@
 import React, { useState, useEffect } from 'react';
 
-// 2월 19일부터 3월 31일까지의 만찬 데이터
-const meditationData = [
-  // --- 2월: 사랑과 연결 ---
-  { id: 19, month: 2, title: "겸손의 허리띠", miqra: "다 서로 겸손으로 허리를 동이라 하나님은 교만한 자를 대적하시되 겸손한 자들에게는 은혜를 주시느니라 (벧전 5:5)", lishma: "인정받으려 했던 사심을 씻어내십시오. 은혜만을 갈망하며 나를 낮추어 비웁니다.", tota: "겸손한 자에게 부어주시는 하늘의 충만함을 창자에 채우십시오. 비울수록 부요해집니다.", christo: "모든 공로를 주님께 돌리십시오. 당신의 겸손함이 주님의 영광을 드러낼 것입니다." },
-  { id: 20, month: 2, title: "평화의 사도", miqra: "할 수 있거든 너희로서는 모든 사람과 더불어 화목하라 (로 12:18)", lishma: "타인을 꺾으려던 공격성과 분노를 씻으십시오. 평강의 왕을 모시기 위해 분노를 비웁니다.", tota: "폭풍 속에서도 잠잠한 주님의 평안을 창자에 채우십시오. 평화는 성도의 능력입니다.", christo: "갈등이 있는 곳에서 화평의 다리가 되십시오. 당신은 하나님의 아들이라 일컬음을 받을 것입니다." },
-  { id: 28, month: 2, title: "축복의 통로", miqra: "땅의 모든 족속이 너로 말미암아 복을 얻을 것이니라 (창 12:3)", lishma: "나만 복되려 움켜쥐려 했던 탐욕을 씻으십시오. 축복의 전달자가 되기 위해 소유권을 비웁니다.", tota: "내가 주님의 은혜가 흘러가는 거룩한 관이 되었음을 창자에 새기십시오.", christo: "오늘 모든 이에게 축복의 말을 서빙하십시오. 당신을 통해 주님 나라가 확장됩니다. [cite: 165]" },
+// 1. [복원] 월별 주제 (PDF 및 목사님 철학 반영)
+const MONTHLY_THEMES = {
+  1: "새로운 시작과 갈릴리의 부름",
+  2: "광야에서 만나는 하나님의 음성",
+  3: "성막의 뜰에서 지성소까지",
+  4: "십자가와 부활의 영성",
+  5: "가정 속에 흐르는 생명의 강",
+  6: "본질을 꿰뚫는 영적 패러다임",
+  7: "성육신 묵상의 깊은 품",
+  8: "A.D.의 삶으로 나가는 파송",
+  9: "진설병의 말씀과 영적 배부름",
+  10: "성령의 조명과 인생의 결단",
+  11: "감사와 축제의 왕의 식탁",
+  12: "다시 오실 왕을 기다리는 삶"
+};
 
-  // --- 3월: 생명의 깨어남 ---
-  { id: 1, month: 3, title: "눈을 열어서", miqra: "이에 그들의 눈이 밝아져 그인 줄 알아보더니... 우리 속에서 마음이 뜨겁지 아니하더냐 (눅 24:31-32)", lishma: "영적으로 둔해진 눈을 물두멍에 씻으십시오. 보이는 것만 신뢰하던 불신앙을 비웁니다. [cite: 178]", tota: "주님께서 내 영안을 여시는 순간을 창자로 느끼십시오. 말씀으로 마음이 뜨거워집니다. [cite: 179-180]", christo: "오늘 당신의 영안이 열려 있습니다. 일상 속에서 주님의 임재와 손길을 발견하십시오. [cite: 181]" },
-  { id: 15, month: 3, title: "경이로움", miqra: "하늘이 하나님의 영광을 선포하고 궁창이 그의 손으로 하신 일을 나타내는도다 (시 19:1)", lishma: "일상을 당연하게 여기던 무감각함을 씻으십시오. 창조 세계를 배경으로만 보던 둔함을 비웁니다. [cite: 187]", tota: "하늘과 땅이 선포하는 영광이 내 창자를 감동시키게 하십시오. 영적 감수성이 회복됩니다. [cite: 188-189]", christo: "오늘 모든 것 속에서 창조주의 영광을 발견하십시오. 그 신선한 감동을 이웃과 나누십시오. [cite: 190-191]" },
-  { id: 31, month: 3, title: "신묘막측한 창조", miqra: "나를 지으심이 심히 기묘하심이라 주께서 하시는 일이 기이함을 내 영혼이 잘 아나이다 (시 139:14)", lishma: "무뎌진 감각으로 일상을 지루하게 여겼던 사실을 씻으십시오. 기적을 당연시하던 오만을 비웁니다. [cite: 196]", tota: "내 존재 자체가 주님의 위대한 작품임을 창자에 새기십시오. 경이로움이 영혼의 배부름이 됩니다. [cite: 197]", christo: "당신은 살아있는 조각품입니다. 당신의 인격을 통해 주님의 놀라운 솜씨를 세상에 맛보게 하십시오. [cite: 199]" }
-];
+// 2. [데이터] 365일 개별화된 만나 구조
+const generateMeditationData = () => {
+  const data = [];
+  for (let m = 1; m <= 12; m++) {
+    const lastDay = new Date(2026, m, 0).getDate();
+    for (let d = 1; d <= lastDay; d++) {
+      let title = `${m}월 ${d}일 왕의 식탁`;
+      let verse = "출애굽기 24:11";
+      let verseText = "그들은 하나님을 뵙고 먹고 마셨더라";
+      let lishma = "내 안의 헬라식 사고를 물두멍에 씻어내고 나를 비웁니다.";
+      let tota = "주님의 인격이 내 영혼의 창자에 채워짐을 경험합니다.";
+      let christo = "오늘 나는 주님의 통치를 대행하는 파송된 왕입니다.";
+
+      // 특정 날짜 데이터 예시 (PDF 내용 반영)
+      if (m === 1 && d === 1) {
+        title = "갈릴리 조반의 초대";
+        verse = "요한복음 21:12";
+        verseText = "와서 조반을 먹으라 하시니 제자들이 주님이신 줄 아는 고로 당신이 누구냐 감히 묻는 자가 없더라";
+        lishma = "실패한 밤의 그물을 씻으십시오. 결과 중심의 사고를 물두멍에 던지고 나를 비웁니다.";
+        tota = "주님이 구워주신 생선의 따뜻함이 내 영혼의 창자에 채워집니다. 나는 사랑받는 자입니다.";
+        christo = "배부른 베드로가 사명을 받았듯, 오늘 나는 주님의 사랑으로 배불러 세상을 향해 나갑니다.";
+      }
+      if (m === 5 && d === 16) {
+        title = "내가 곧 주님의 성전";
+        verse = "에베소서 2:22";
+        verseText = "너희도 성령 안에서 하나님이 거하실 처소가 되기 위하여 그리스도 예수 안에서 함께 지어져 가느니라";
+        lishma = "인생을 내 취향대로 지으려던 욕심의 도면을 씻어내십시오.";
+        tota = "나는 움직이는 지성소라는 정체성을 뼈와 근육에 새기십시오.";
+        christo = "함께 지어져 가는 공동체의 지체로서 오늘 하루를 거룩하게 성육신합니다.";
+      }
+
+      data.push({ id: `${m}-${d}`, month: m, day: d, title, verse, verseText, lishma, tota, christo });
+    }
+  }
+  return data;
+};
+
+const allMeditationData = generateMeditationData();
 
 export default function App() {
-  const [currentIdx, setCurrentIdx] = useState(0); // 2월 19일부터 시작
-  const [memo, setMemo] = useState("");
+  const [view, setView] = useState('menu');
+  const [selectedMonth, setSelectedMonth] = useState(1);
+  const [selectedData, setSelectedData] = useState(null);
+  const [memo, setMemo] = useState('');
+  const appUrl = "https://kings-table-app.vercel.app";
 
-  const data = meditationData[currentIdx] || meditationData[0];
-
-  useEffect(() => {
-    const savedMemo = localStorage.getItem(`memo-${data.month}-${data.id}`);
-    setMemo(savedMemo || "");
-  }, [currentIdx]);
-
-  const handleNext = () => {
-    localStorage.setItem(`memo-${data.month}-${data.id}`, memo);
-    if (currentIdx < meditationData.length - 1) {
-      setCurrentIdx(prev => prev + 1);
-      setMemo("");
-      window.scrollTo(0, 0);
+  const handleShare = () => {
+    const shareText = `[왕의 식탁 묵상 카드]\n\n"${selectedData.verseText}"\n\n오늘의 통찰: ${selectedData.tota}\n\n만찬장 주소: ${appUrl}\n\n© 2026 THE KING'S BANQUET`;
+    if (navigator.share) {
+      navigator.share({ title: '오늘의 만나 공유', text: shareText });
     } else {
-      alert("3월의 모든 만찬을 마쳤습니다. 4월의 성장을 준비하십시오!");
+      navigator.clipboard.writeText(shareText);
+      alert("묵상이 복사되었습니다.");
     }
   };
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#fdfaf6', padding: '15px', fontFamily: 'serif' }}>
-      <div style={{ maxWidth: '480px', margin: '0 auto', backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+  // 1. 메인 메뉴
+  if (view === 'menu') {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#f8f7f4', padding: '40px 20px', textAlign: 'center', fontFamily: 'serif' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '15px' }}>
+          <div style={{ width: '40px', height: '6px', backgroundColor: '#0000FF', borderRadius: '3px' }}></div>
+          <div style={{ width: '40px', height: '6px', backgroundColor: '#8B00FF', borderRadius: '3px' }}></div>
+          <div style={{ width: '40px', height: '6px', backgroundColor: '#FF0000', borderRadius: '3px' }}></div>
+          <div style={{ width: '40px', height: '6px', backgroundColor: '#FFFFFF', border: '1px solid #ddd', borderRadius: '3px' }}></div>
+        </div>
+        <h1 style={{ color: '#4b2c20', fontSize: '28px', fontWeight: 'bold', margin: '0' }}>미리토크 365</h1>
+        <p style={{ color: '#78350f', fontSize: '20px', fontWeight: 'bold', margin: '5px 0 30px 0' }}>[ 왕의 식탁 ]</p>
         
-        {/* 헤더: 월별 테마 색상 적용 */}
-        <div style={{ backgroundColor: data.month === 2 ? '#4a148c' : '#2e7d32', color: 'white', padding: '30px 20px', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '24px', margin: 0, letterSpacing: '2px', fontWeight: 'bold' }}>KING'S TABLE</h1>
-          <p style={{ fontSize: '13px', opacity: 0.9, marginTop: '8px' }}>
-            {data.month}월: {data.month === 2 ? "사랑과 연결" : "생명의 깨어남"} 
+        <div style={{ backgroundColor: '#fff', padding: '25px', borderRadius: '20px', borderTop: '6px solid #8B00FF', marginBottom: '30px', boxShadow: '0 8px 20px rgba(0,0,0,0.05)' }}>
+          <p style={{ fontSize: '15px', color: '#444', lineHeight: '1.8' }}>
+            "그들은 하나님을 뵙고 먹고 마셨더라" (출 24:11)<br/>
+            <b>새로운 A.D.의 인생이 열립니다. 기대하세요!</b>
           </p>
         </div>
 
-        <div style={{ padding: '25px' }}>
-          <div style={{ marginBottom: '35px', textAlign: 'center' }}>
-            <div style={{ display: 'inline-block', padding: '4px 12px', backgroundColor: '#e1f5fe', color: '#01579b', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold', marginBottom: '15px' }}>
-              STAGE 01: MIQRA (소환) [cite: 20]
-            </div>
-            <h2 style={{ fontSize: '20px', color: '#212121', marginBottom: '20px' }}>{data.month}월 {data.id}일 : {data.title}</h2>
-            <div style={{ padding: '25px', backgroundColor: '#fff8e1', borderRadius: '15px', border: '1px solid #ffd54f' }}>
-               <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#3e2723', fontWeight: '600', margin: 0, wordBreak: 'keep-all' }}>
-                 "{data.miqra}"
-               </p>
-            </div>
-            <p style={{ fontSize: '13px', color: '#795548', marginTop: '12px', fontStyle: 'italic' }}>왕의 음성을 영혼에 소환하십시오. [cite: 22]</p>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ padding: '15px', borderLeft: '4px solid #78909c', backgroundColor: '#f8f9fa' }}>
-              <h3 style={{ fontSize: '15px', color: '#455a64', marginBottom: '5px', fontWeight: 'bold' }}>02 LISHMA (정결) [cite: 28]</h3>
-              <p style={{ fontSize: '15px', color: '#374151', lineHeight: '1.6', margin: 0 }}>{data.lishma}</p>
-            </div>
-
-            <div style={{ padding: '15px', borderLeft: '4px solid #fb8c00', backgroundColor: '#fff3e0' }}>
-              <h3 style={{ fontSize: '15px', color: '#e65100', marginBottom: '5px', fontWeight: 'bold' }}>03 TOTA (체화) [cite: 36]</h3>
-              <p style={{ fontSize: '15px', color: '#374151', lineHeight: '1.6', margin: 0 }}>{data.tota}</p>
-            </div>
-
-            <div style={{ padding: '15px', borderLeft: '4px solid #c62828', backgroundColor: '#ffebee' }}>
-              <h3 style={{ fontSize: '15px', color: '#b71c1c', marginBottom: '5px', fontWeight: 'bold' }}>04 CHRISTO (파송) [cite: 45]</h3>
-              <p style={{ fontSize: '15px', color: '#374151', lineHeight: '1.6', margin: 0 }}>{data.christo}</p>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '30px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '10px', color: '#212121' }}>📝 오늘의 실천 메모</h3>
-            <textarea
-              style={{ width: '100%', height: '100px', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '12px', fontSize: '14px', outline: 'none', backgroundColor: '#fafafa', boxSizing: 'border-box' }}
-              [cite_start]placeholder="오늘 받은 깨달음을 기록하십시오... [cite: 1398]"
-              value={memo}
-              onChange={(e) => setMemo(e.target.value)}
-            />
-          </div>
-
-          <button onClick={handleNext} style={{ width: '100%', marginTop: '20px', padding: '18px', backgroundColor: data.month === 2 ? '#4a148c' : '#2e7d32', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
-            만찬 완료 및 다음 날 이동
-          </button>
-        </div>
-
-        <div style={{ padding: '20px', textAlign: 'center', fontSize: '11px', color: '#9e9e9e', backgroundColor: '#f5f5f5' }}>
-          <p style={{ margin: 0 }}>섬김이: 이대희 목사 | ckr9191@hanmail.net</p>
-          <p style={{ marginTop: '4px' }}>© 2026 THE KING'S BANQUET. DESIGNED FOR THE ROYAL PRIESTHOOD.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', maxWidth: '420px', margin: '0 auto' }}>
+          {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => (
+            <button key={m} onClick={() => { setSelectedMonth(m); setView('calendar'); }}
+              style={{ padding: '18px 0', backgroundColor: 'white', border: '1px solid #d6d3d1', borderRadius: '12px', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer' }}>{m}월</button>
+          ))}
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
+  // 2. 달력 화면
+  if (view === 'calendar') {
+    const days = allMeditationData.filter(d => d.month === selectedMonth);
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#f8f7f4', padding: '20px', fontFamily: 'serif' }}>
+        <button onClick={() => setView('menu')} style={{ marginBottom: '20px', border: 'none', background: 'none', fontWeight: 'bold', color: '#4b2c20' }}>🏠 홈으로</button>
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '24px', color: '#4b2c20', margin: '0' }}>{selectedMonth}월 왕의 식탁</h2>
+          <p style={{ color: '#92400e', fontSize: '16px', fontWeight: 'bold', marginTop: '10px' }}>{MONTHLY_THEMES[selectedMonth]}</p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', maxWidth: '420px', margin: '0 auto' }}>
+          {days.map(d => (
+            <button key={d.id} onClick={() => { setSelectedData(d); setView('detail'); }}
+              style={{ padding: '15px 5px', backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>{d.day}</button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // 3. 카드형 묵상 상세 화면
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: '#f4f2ee', padding: '15px', fontFamily: 'serif' }}>
+      <div style={{ maxWidth: '420px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+          <button onClick={() => setView('calendar')} style={{ background:
