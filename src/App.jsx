@@ -1,130 +1,153 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-// 1월 & 2월 핵심 데이터
+// 1월 & 2월 통합 데이터
 const meditationData = [
-  { id: 1, month: 1, day: 1, title: "갈릴리 조반", verse: "와서 조반을 먹으라 (요 21:12)", lishma: "실패한 밤의 그물을 씻으십시오. 결과 중심의 사고를 물두멍에 던지고 나를 비웁니다.", tota: "주님이 구워주신 생선의 따뜻함이 창자에 채워집니다. 나는 사랑받는 자입니다.", christo: "사명을 받은 베드로처럼 오늘 나는 주님의 사랑으로 배불러 세상을 향해 나갑니다." },
-  { id: 32, month: 2, day: 1, title: "사랑의 부르심", verse: "나의 사랑, 내 어여쁜 자야 함께 가자 (아 2:10)", lishma: "영적 게으름과 분주함을 물두멍에 씻어냅니다. 주님을 맞이하기 위해 나를 비웁니다.", tota: "나를 향한 주님의 뜨거운 열망을 창자에 채우십시오. 나는 사랑받는 존재입니다.", christo: "오늘 당신을 초청하시는 주님의 손을 잡고 세상 속으로 나아가십시오." }
+  { 
+    id: 1, month: 1, day: 1, 
+    title: "갈릴리 조반", 
+    verse: "요한복음 21:12", 
+    verseText: "예수께서 이르시되 와서 조반을 먹으라 하시니 제자들이 주님이신 줄 아는 고로 당신이 누구냐 감히 묻는 자가 없더라", 
+    lishma_content: "실패한 밤의 그물을 씻으십시오. 결과 중심의 사고를 물두멍에 던지고 나를 비웁니다.", 
+    tota_content: "주님이 구워주신 생선의 따뜻함이 내 영혼의 창자에 채워집니다. 나는 사랑받는 자입니다.", 
+    christo_content: "말씀이 생명이 되어 수가성 여인처럼 달려나갑니다. B.C.의 나를 버리고 A.D.의 새 삶으로 나아갑니다." 
+  }
 ];
 
-// 365일 데이터 구조 자동 생성
+// 365일 데이터 자동 생성
 for (let m = 1; m <= 12; m++) {
   for (let d = 1; d <= 31; d++) {
     const id = (m - 1) * 31 + d;
     if (!meditationData.find(item => item.id === id)) {
       meditationData.push({
-        id: id, month: m, day: d, title: `${m}월 ${d}일 거룩한 만찬`, verse: "왕의 식탁으로의 초대",
-        lishma: "내 안의 사심을 씻어내고 나를 비웁니다.", tota: "주님의 성품을 창자에 채웁니다.", christo: "예수로 사는 삶을 위해 나갑니다."
+        id: id, month: m, day: d, title: `${m}월 ${d}일 왕의 식탁`, 
+        verse: "출애굽기 24:11", 
+        verseText: "그들은 하나님을 뵙고 먹고 마셨더라",
+        lishma_content: "말씀의 의도를 살피며 내면의 뜰로 깊이 들어갑니다.", 
+        tota_content: "성경 전체의 맥락 속에서 오늘의 영적 통찰을 얻습니다.", 
+        christo_content: "성육신된 말씀으로 세상 속에서 본질을 보는 능력을 발휘합니다."
       });
     }
   }
 }
-
-// 성막 4색 로고 컴포넌트
-const TabernacleLogo = () => (
-  <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginBottom: '15px' }}>
-    <div style={{ width: '40px', height: '6px', backgroundColor: '#0000FF', borderRadius: '2px' }}></div> {/* 청색: 생명 */}
-    <div style={{ width: '40px', height: '6px', backgroundColor: '#8B00FF', borderRadius: '2px' }}></div> {/* 자홍색: 왕권 */}
-    <div style={{ width: '40px', height: '6px', backgroundColor: '#FF0000', borderRadius: '2px' }}></div> {/* 홍색: 고난 */}
-    <div style={{ width: '40px', height: '6px', backgroundColor: '#FFFFFF', border: '1px solid #ddd', borderRadius: '2px' }}></div> {/* 흰색: 성결 */}
-  </div>
-);
 
 export default function App() {
   const [view, setView] = useState('menu');
   const [selectedMonth, setSelectedMonth] = useState(1);
   const [selectedData, setSelectedData] = useState(null);
 
-  // 1. 메인 메뉴 화면 (로고에 4색 적용)
   if (view === 'menu') {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f4', padding: '40px 20px', fontFamily: 'serif', textAlign: 'center' }}>
-        <TabernacleLogo />
-        <h1 style={{ color: '#4b2c20', fontSize: '32px', margin: '0 0 5px 0', letterSpacing: '3px', fontWeight: 'bold' }}>KING'S TABLE</h1>
-        <p style={{ color: '#78350f', fontSize: '16px', fontWeight: 'bold', marginBottom: '30px' }}>휘장을 지나 왕의 식탁으로</p>
+        <h1 style={{ color: '#4b2c20', fontSize: '32px', margin: '0', letterSpacing: '2px', fontWeight: 'bold' }}>미리토크 365</h1>
+        <h2 style={{ color: '#78350f', fontSize: '24px', margin: '5px 0 30px 0', fontWeight: 'bold' }}>[ 왕의 식탁 ]</h2>
         
-        <div style={{ backgroundColor: '#fff', padding: '25px', borderRadius: '15px', borderBottom: '4px solid #8B00FF', marginBottom: '30px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-          <p style={{ fontSize: '16px', color: '#333', lineHeight: '1.8', margin: 0 }}>
-            "그들은 하나님을 뵙고 먹고 마셨더라" <br/>
-            <span style={{ fontSize: '14px', color: '#92400e' }}>(출애굽기 24:11)</span>
+        {/* 목마른 자를 향한 생수의 초청 */}
+        <div style={{ backgroundColor: '#fff', padding: '25px', borderRadius: '20px', borderLeft: '8px solid #0000FF', marginBottom: '25px', boxShadow: '0 8px 20px rgba(0,0,0,0.06)' }}>
+          <p style={{ fontSize: '18px', color: '#1a365d', lineHeight: '1.6', fontWeight: 'bold', margin: '0 0 10px 0' }}>
+            "누구든지 목마르거든, 배고프거든 오세요!"
+          </p>
+          <p style={{ fontSize: '15px', color: '#444', lineHeight: '1.7', margin: 0 }}>
+            생수의 강이 넘치고 영원히 배부를 것입니다. <br/>
+            주님과 얼굴을 대면하여 먹고 마시는 <br/>
+            <b>지성소의 하루</b>가 시작됩니다.
           </p>
         </div>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '0 auto 30px auto' }}>
-          <button onClick={() => setView('intro')} style={{ padding: '15px', backgroundColor: '#4b2c20', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>👑 미리토크 365 특징</button>
-          <button onClick={() => setView('guide')} style={{ padding: '15px', backgroundColor: '#fff', color: '#4b2c20', border: '1px solid #4b2c20', borderRadius: '10px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>📖 사용 설명서</button>
-        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', maxWidth: '400px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', maxWidth: '420px', margin: '0 auto 30px auto' }}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(m => (
             <button key={m} onClick={() => { setSelectedMonth(m); setView('calendar'); }}
-              style={{ padding: '18px 0', backgroundColor: 'white', border: '1px solid #d6d3d1', borderRadius: '8px', color: '#4b2c20', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
-              {m}월
-            </button>
+              style={{ padding: '22px 0', backgroundColor: 'white', border: '1px solid #d6d3d1', borderRadius: '12px', color: '#4b2c20', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>{m}월</button>
           ))}
         </div>
-      </div>
-    );
-  }
-
-  // 2. 특징 및 설명서 (Intro/Guide 공통 홈 버튼 적용)
-  if (view === 'intro' || view === 'guide') {
-    const isIntro = view === 'intro';
-    return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f4', padding: '30px 20px', fontFamily: 'serif' }}>
-        <button onClick={() => setView('menu')} style={{ marginBottom: '20px', background: 'none', border: 'none', color: '#4b2c20', fontWeight: 'bold', cursor: 'pointer' }}>🏠 홈으로 돌아가기</button>
-        <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '15px', borderTop: `8px solid ${isIntro ? '#0000FF' : '#FF0000'}` }}>
-          <h2 style={{ color: '#4b2c20' }}>{isIntro ? "미리토크 365 특징" : "어떻게 묵상할까요?"}</h2>
-          <p style={{ lineHeight: '1.8' }}>
-            {isIntro ? "성막 휘장의 4가지 색(청, 자홍, 홍, 가늘게 꼰 베실)은 그리스도의 생명, 왕권, 고난, 성결을 의미합니다. 미리토크는 이 휘장을 지나 하나님을 대면하는 묵상입니다." : "1.Miqra(경청), 2.Lishma(정결), 3.Tota(체화), 4.Christo(파송)의 단계를 통해 왕의 식탁에 참여하십시오."}
-          </p>
+        
+        <div style={{ padding: '15px', fontSize: '14px', color: '#78350f', fontStyle: 'italic', lineHeight: '1.6' }}>
+          "B.C.의 나와 A.D.의 나는 달라진다" <br/>
+          본질을 보는 능력이 생기는 영적 패러다임의 전환
         </div>
       </div>
     );
   }
 
-  // 3. 월별 날짜 선택 (Calendar)
   if (view === 'calendar') {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f4', padding: '30px 20px', fontFamily: 'serif' }}>
-        <button onClick={() => setView('menu')} style={{ marginBottom: '20px', background: 'none', border: 'none', color: '#4b2c20', fontWeight: 'bold', cursor: 'pointer' }}>🏠 홈으로 돌아가기</button>
-        <h2 style={{ textAlign: 'center', color: '#4b2c20', marginBottom: '30px' }}>{selectedMonth}월의 만찬</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', maxWidth: '400px', margin: '0 auto' }}>
+        <button onClick={() => setView('menu')} style={{ marginBottom: '20px', background: 'none', border: 'none', color: '#4b2c20', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}>🏠 홈으로 돌아가기</button>
+        <h2 style={{ textAlign: 'center', color: '#4b2c20', marginBottom: '30px', fontSize: '26px' }}>{selectedMonth}월 왕의 식탁</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px', maxWidth: '420px', margin: '0 auto' }}>
           {meditationData.filter(d => d.month === selectedMonth).sort((a,b) => a.day - b.day).map(d => (
             <button key={d.id} onClick={() => { setSelectedData(d); setView('detail'); }}
-              style={{ padding: '15px 5px', backgroundColor: 'white', border: '1px solid #e7e5e4', borderRadius: '8px', cursor: 'pointer' }}>{d.day}</button>
+              style={{ padding: '18px 5px', backgroundColor: 'white', border: '1px solid #e7e5e4', borderRadius: '10px', cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}>{d.day}</button>
           ))}
         </div>
       </div>
     );
   }
 
-  // 4. 묵상 상세 (Table - 헤더에 4색 포인트 적용)
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f4', padding: '15px', fontFamily: 'serif' }}>
-      <div style={{ maxWidth: '450px', margin: '0 auto', backgroundColor: 'white', borderRadius: '15px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
-        <div style={{ height: '5px', display: 'flex' }}>
+      <div style={{ maxWidth: '480px', margin: '0 auto', backgroundColor: 'white', borderRadius: '25px', boxShadow: '0 20px 50px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
+        {/* 성막 4색 휘장 */}
+        <div style={{ height: '8px', display: 'flex' }}>
           <div style={{ flex: 1, backgroundColor: '#0000FF' }}></div>
           <div style={{ flex: 1, backgroundColor: '#8B00FF' }}></div>
           <div style={{ flex: 1, backgroundColor: '#FF0000' }}></div>
           <div style={{ flex: 1, backgroundColor: '#FFFFFF', borderBottom: '1px solid #eee' }}></div>
         </div>
-        <div style={{ backgroundColor: '#4b2c20', color: 'white', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button onClick={() => setView('calendar')} style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}>◀ 목록</button>
-          <span style={{ fontWeight: 'bold', letterSpacing: '1px' }}>KING'S TABLE</span>
-          <button onClick={() => setView('menu')} style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}>🏠 홈</button>
+        
+        <div style={{ backgroundColor: '#4b2c20', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button onClick={() => setView('calendar')} style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px' }}>◀ 목록</button>
+          <span style={{ fontWeight: 'bold', letterSpacing: '2px', fontSize: '18px' }}>KING'S TABLE</span>
+          <button onClick={() => setView('menu')} style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px' }}>🏠 홈</button>
         </div>
-        <div style={{ padding: '25px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-            <span style={{ color: '#92400e', fontSize: '13px', fontWeight: 'bold' }}>{selectedData.month}월 {selectedData.day}일</span>
-            <h2 style={{ fontSize: '22px', color: '#444', margin: '8px 0' }}>{selectedData.title}</h2>
-            <p style={{ fontSize: '14px', fontStyle: 'italic', color: '#78716c' }}>"{selectedData.verse}"</p>
+
+        <div style={{ padding: '35px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <span style={{ color: '#92400e', fontSize: '15px', fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>{selectedData.month}월 {selectedData.day}일 거룩한 만찬</span>
+            <h2 style={{ fontSize: '28px', color: '#1a1a1a', margin: '0', lineHeight: '1.2' }}>{selectedData.title}</h2>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <section><h3 style={{ color: '#0000FF', fontSize: '16px', borderLeft: '3px solid #0000FF', paddingLeft: '10px', marginBottom: '5px' }}>Lishma: 정결</h3><p style={{ fontSize: '15px', color: '#444', margin: 0 }}>{selectedData.lishma}</p></section>
-            <section><h3 style={{ color: '#8B00FF', fontSize: '16px', borderLeft: '3px solid #8B00FF', paddingLeft: '10px', marginBottom: '5px' }}>Tota: 체화</h3><p style={{ fontSize: '15px', color: '#444', margin: 0 }}>{selectedData.tota}</p></section>
-            <section><h3 style={{ color: '#FF0000', fontSize: '16px', borderLeft: '3px solid #FF0000', paddingLeft: '10px', marginBottom: '5px' }}>Christo: 파송</h3><p style={{ fontSize: '15px', color: '#444', margin: 0 }}>{selectedData.christo}</p></section>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '35px' }}>
+            {/* 1. Miqra - 진설병의 말씀 */}
+            <section>
+              <h3 style={{ color: '#555', fontSize: '17px', fontWeight: 'bold', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ backgroundColor: '#555', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '13px' }}>1</span> 1. Miqra : 말씀 경청
+              </h3>
+              <div style={{ backgroundColor: '#fafaf9', padding: '25px', borderRadius: '18px', border: '1px solid #e7e5e4' }}>
+                <p style={{ fontSize: '19px', color: '#000', lineHeight: '1.8', fontWeight: '500', margin: 0, textAlign: 'center' }}>"{selectedData.verseText}"</p>
+                <p style={{ fontSize: '15px', color: '#92400e', marginTop: '20px', textAlign: 'center', fontWeight: 'bold' }}>— {selectedData.verse} —</p>
+              </div>
+            </section>
+
+            {/* 2. Lishma - 번제단과 물두멍 */}
+            <section>
+              <h3 style={{ color: '#0000FF', fontSize: '17px', fontWeight: 'bold', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ backgroundColor: '#0000FF', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '13px' }}>2</span> 2. Lishma : 나를 비움
+              </h3>
+              <p style={{ fontSize: '17px', color: '#333', lineHeight: '1.8', margin: 0, paddingLeft: '34px' }}>{selectedData.lishma_content}</p>
+            </section>
+
+            {/* 3. Tota - 성령의 조명과 체화 */}
+            <section>
+              <h3 style={{ color: '#8B00FF', fontSize: '17px', fontWeight: 'bold', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ backgroundColor: '#8B00FF', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '13px' }}>3</span> 3. Tota : 하나님 체화
+              </h3>
+              <p style={{ fontSize: '17px', color: '#1a1a1a', lineHeight: '1.8', margin: 0, paddingLeft: '34px', fontWeight: 'bold' }}>{selectedData.tota_content}</p>
+            </section>
+
+            {/* 4. Christo - 향단의 결단과 지성소 파송 */}
+            <section style={{ backgroundColor: '#fff5f5', padding: '20px', borderRadius: '20px', border: '1px solid #fed7d7' }}>
+              <h3 style={{ color: '#FF0000', fontSize: '17px', fontWeight: 'bold', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ backgroundColor: '#FF0000', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '13px' }}>4</span> 4. Christo : 성육신과 파송
+              </h3>
+              <p style={{ fontSize: '17px', color: '#333', lineHeight: '1.8', margin: 0, paddingLeft: '10px' }}>{selectedData.christo_content}</p>
+              <div style={{ marginTop: '20px', fontSize: '14px', color: '#c53030', fontStyle: 'italic', borderLeft: '4px solid #FF0000', paddingLeft: '15px', fontWeight: 'bold' }}>
+                "지성소의 주님을 만난 당신, 이제 세상 속의 살아있는 말씀으로 살아내십시오." (롬 12:1)
+              </div>
+            </section>
           </div>
-          <button onClick={() => setView('menu')} style={{ width: '100%', marginTop: '30px', padding: '18px', backgroundColor: '#4b2c20', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' }}>만찬 완료 후 홈으로</button>
+
+          <button onClick={() => { alert('지성소의 만찬을 마쳤습니다. 주님과 함께 세상을 향해 나갑니다.'); setView('menu'); }} 
+            style={{ width: '100%', marginTop: '50px', padding: '22px', backgroundColor: '#4b2c20', color: 'white', border: 'none', borderRadius: '18px', fontWeight: 'bold', fontSize: '20px', cursor: 'pointer', boxShadow: '0 10px 20px rgba(75, 44, 32, 0.4)' }}>만찬 완료</button>
         </div>
       </div>
     </div>
